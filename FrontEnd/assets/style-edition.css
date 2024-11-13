@@ -608,3 +608,10 @@ footer {
 #valider-photo {
   background-color: #a7a7a7;
 }
+
+.nouvelle-image {
+  object-fit: contain;
+  max-width: 420px;
+  max-height: 169px;
+  cursor: pointer;
+}

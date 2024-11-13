@@ -165,3 +165,47 @@ async function addCategories() {
 }
 
 addCategories();
+
+//Ajout photo//
+// Sélection des éléments du DOM
+const addPhotoBtn = document.getElementById("add-photo-btn");
+const fileInput = document.getElementById("file-input");
+const photoContainer = document.getElementById("photo-container");
+
+// Fonction pour prévisualiser l'image sélectionnée
+function previewImage(event) {
+  const file = event.target.files[0]; // Obtenir le fichier sélectionné
+  if (file && file.type.startsWith("image/")) {
+    const reader = new FileReader();
+
+    // Chargement de l'image pour prévisualisation
+    reader.onload = function (e) {
+      // Créer une balise <img> pour afficher l'image
+      const img = document.createElement("img");
+      img.classList.add("nouvelle-image");
+      img.src = e.target.result; // Assigner la source de l'image
+
+      // Vider le contenu actuel, afficher l'image et masquer le bouton
+      photoContainer.innerHTML = "";
+      photoContainer.appendChild(img);
+
+      // Permettre de cliquer sur l'image elle-même pour changer la photo
+      img.addEventListener("click", () => {
+        fileInput.click(); // Rouvrir le sélecteur de fichier
+      });
+    };
+
+    // Lire le fichier sous forme d'URL de données
+    reader.readAsDataURL(file);
+  } else {
+    alert("Veuillez sélectionner une image valide.");
+  }
+}
+
+// Gestionnaire de clic pour ouvrir le sélecteur de fichiers
+addPhotoBtn.addEventListener("click", () => {
+  fileInput.click(); // Ouvre la boîte de dialogue pour sélectionner un fichier
+});
+
+// Lorsque l'utilisateur sélectionne un fichier, prévisualiser l'image
+fileInput.addEventListener("change", previewImage);
