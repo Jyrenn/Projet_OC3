@@ -72,11 +72,42 @@
         style="display: none"
       >
       <div class="modal-wrapper">
-        <i id="x-mark" class="fa-solid fa-xmark"></i>
+        <i id="x-mark" class="croix fa-solid fa-xmark"></i>
         <h2 id="titre-modal">Galerie photo</h2>
         <div class="gallery-modal"></div>
         <hr class="ligne-grise">
-        <input type="submit" value="Ajouter une photo" />
+        <input class="ajouter-une-photo" type="submit" value="Ajouter une photo" />
+      </div>
+      </aside>
+      <aside
+        id="modal2"
+        class="modal"
+        aria-hidden="true"
+        role="dialog"
+        style="display: none"
+      >
+      <div class="modal-wrapper">
+        <i id="x-mark" class="croix fa-solid fa-xmark"></i>
+        <i id="arrow-left" class="fa-solid fa-arrow-left"></i>
+        <h2 id="titre-modal">Ajout photo</h2>
+        <div class="formulaire">
+          <div class="formulaire-photo">
+            <i class="fa-regular fa-image"></i>
+            <button type="button">+ Ajouter photo</button>
+            <p>jpg.png : 4mo max</p>
+          </div>
+          <div class="formulaire-titre">
+            <p class="titre">Titre</p>
+            <input type="text" name="titre-texte" />
+          </div>
+          <div class="formulaire-categorie">
+            <p class="titre">Catégorie</p>
+            <select id="choixCategorie" name="choixCategorie">
+            </select>
+          </div>
+        </div>
+        <hr class="ligne-grise">
+        <input id="valider-photo" type="submit" value="Valider" />
       </div>
       </aside>
       <section id="portfolio">

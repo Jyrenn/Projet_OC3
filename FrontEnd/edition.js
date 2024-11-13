@@ -15,6 +15,7 @@ export function addGallery() {
     const work = works[i];
     // Créer une nouvelle carte pour chaque élément
     const card = document.createElement("figure");
+    card.setAttribute("data-id", `${work.id}`);
     card.innerHTML = `
                 <img src="${work.imageUrl}" alt="${work.title}" />
                 <figcaption>${work.title}</figcaption>
@@ -29,9 +30,10 @@ export function addGallery() {
     const work = works[i];
     // Créer une nouvelle carte pour chaque élément
     const card = document.createElement("figure");
+    card.setAttribute("data-id", `${work.id}`);
     card.innerHTML = `
                 <img src="${work.imageUrl}" alt="${work.title}" />
-                <i class="fa-solid fa-trash-can"></i>
+                <i data-id="${work.id}" class="trash-icon fa-solid fa-trash-can"></i>
             `;
 
     // Ajouter la carte au conteneur de la galerie
@@ -42,30 +44,124 @@ export function addGallery() {
 // Appeler la fonction pour ajouter la galerie
 addGallery();
 
-const openModal = function (e) {
-  e.preventDefault();
-
-  const target = document.querySelector(e.target.getAttribute("href"));
+//Afficher modal1//
+const openModal1 = function (e) {
+  const target = document.getElementById("modal1");
   target.style.display = null;
   target.removeAttribute("aria-hidden");
   target.setAttribute("aria-modal", "true");
 };
 
 document.querySelectorAll(".modifier").forEach((a) => {
-  a.addEventListener("click", openModal);
+  a.addEventListener("click", openModal1);
 });
 
-const closeButton = document.getElementById("x-mark");
-const modal1 = document.getElementById("modal1");
+//Afficher modal2//
+const openModal2 = function (e) {
+  const target = document.getElementById("modal2");
+  target.style.display = null;
+  target.removeAttribute("aria-hidden");
+  target.setAttribute("aria-modal", "true");
+  closeModal1();
+};
 
-function closeModal() {
-  modal1.style.display = "none";
+const a = document.querySelector(".ajouter-une-photo");
+if (a) {
+  a.addEventListener("click", openModal2);
 }
 
-closeButton.addEventListener("click", closeModal);
+//fermer modal//
+const closeButton = document.querySelectorAll(".croix");
+const modal1 = document.getElementById("modal1");
+const modal2 = document.getElementById("modal2");
+
+function closeModal1() {
+  modal1.style.display = "none";
+}
+function closeModal2() {
+  modal2.style.display = "none";
+}
+
+closeButton.forEach((button) => {
+  button.addEventListener("click", () => {
+    closeModal1();
+    closeModal2();
+  });
+});
 
 modal1.addEventListener("click", (event) => {
   if (event.target === modal1) {
-    closeModal();
+    closeModal1();
   }
 });
+modal2.addEventListener("click", (event) => {
+  if (event.target === modal2) {
+    closeModal2();
+  }
+});
+
+//Supprimer un projet//
+
+const token = sessionStorage.getItem("authToken");
+async function deleteProject(projectId) {
+  try {
+    const response = await fetch(
+      `http://localhost:5678/api/works/${projectId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          // Ajoutez ici un header Authorization si nécessaire pour l'authentification, par ex:
+          // 'Authorization': `Bearer ${token}`
+        },
+      }
+    );
+
+    if (response.ok) {
+      document
+        .querySelectorAll(`figure[data-id="${projectId}"]`)
+        .forEach((figure) => {
+          figure.remove();
+        });
+    } else {
+      console.error("Erreur lors de la suppression du projet");
+    }
+  } catch (error) {
+    console.error("Erreur de connexion à l'API", error);
+  }
+}
+
+//Appel de la fonction suppression en cliquant sur les icones poubelle//
+document.querySelectorAll(".trash-icon").forEach((icon) => {
+  icon.addEventListener("click", (event) => {
+    const projectId = event.target.getAttribute("data-id"); // Récupère l'ID du projet
+    if (projectId) {
+      deleteProject(projectId);
+    }
+  });
+});
+
+//Ajouter les catégories dans le menu déroulant de la modal Ajout photo//
+async function addCategories() {
+  const categories = document.getElementById("choixCategorie");
+
+  try {
+    const filtres = await fetch(`http://localhost:5678/api/categories`).then(
+      (response) => response.json()
+    );
+
+    for (let i = 0; i < filtres.length; i++) {
+      const filtre = filtres[i];
+      // Utiliser insertAdjacentHTML pour ajouter chaque option sans écraser les autres
+      categories.insertAdjacentHTML(
+        "beforeend",
+        `<option value="${filtre.id}">${filtre.name}</option>`
+      );
+    }
+  } catch (error) {
+    console.error("Erreur lors du chargement des catégories :", error);
+  }
+}
+
+addCategories();
