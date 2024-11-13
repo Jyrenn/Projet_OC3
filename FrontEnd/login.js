@@ -33,13 +33,11 @@ document
 
       if (response.ok) {
         // Connexion réussie, affiche un message de succès
-        console.log("youpi!");
         const token = result.token;
         sessionStorage.setItem("authToken", token);
         window.location.href = "edition.html";
       } else {
         // Erreur de connexion, affiche un message d'erreur
-        console.log("oh no!");
         let errorMessage = "Email ou mot de passe incorrect.";
 
         if (result.message) {

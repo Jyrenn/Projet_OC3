@@ -6,7 +6,7 @@ const filtres = await fetch(`http://localhost:5678/api/categories`).then(
   (filtres) => filtres.json()
 );
 
-function addGallery() {
+export function addGallery() {
   // Sélectionner le conteneur où les éléments seront ajoutés
   const galleryContainer = document.querySelector(".gallery");
 
@@ -15,6 +15,7 @@ function addGallery() {
     const work = works[i];
     // Créer une nouvelle carte pour chaque élément
     const card = document.createElement("figure");
+    card.setAttribute("data-id", `${work.id}`);
     card.innerHTML = `
               <img src="${work.imageUrl}" alt="${work.title}" />
               <figcaption>${work.title}</figcaption>
@@ -79,5 +80,4 @@ function displayFilteredWorks(filteredWorks) {
     galleryContainer.appendChild(card);
   }
 }
-
 addFiltres();

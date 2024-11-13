@@ -107,6 +107,10 @@ section {
 }
 body {
   line-height: 1;
+  background: #fffef8;
+}
+footer {
+  background: #ffffff;
 }
 ol,
 ul {
@@ -127,6 +131,12 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+.menu a {
+  color: inherit;
+  text-decoration: none;
+}
+
 /** end reset css**/
 body {
   max-width: 1140px;
@@ -138,6 +148,11 @@ header {
   display: flex;
   justify-content: space-between;
   margin: 50px 0;
+}
+
+header img {
+  width: 19.35px;
+  height: 19.35px;
 }
 section {
   margin: 50px 0;
@@ -167,11 +182,13 @@ h2 {
 nav ul {
   display: flex;
   align-items: center;
-  list-style-type: none;
 }
 nav li {
   padding: 0 10px;
   font-size: 1.2em;
+  font-family: Work Sans;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 li:hover {
@@ -225,6 +242,7 @@ button {
   border: solid 1px #1d6154;
   border-radius: 60px;
   padding: 0px 15px;
+  cursor: pointer;
 }
 
 button:hover {
@@ -294,4 +312,61 @@ footer nav ul {
   display: flex;
   justify-content: flex-end;
   margin: 2em;
+}
+
+/*login.html*/
+#login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.titre {
+  margin-top: 150px;
+  margin-bottom: 37px;
+}
+
+.email {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+  gap: 7px;
+}
+
+#email,
+#password {
+  width: 379px;
+  height: 51px;
+  border: none;
+  box-shadow: 0px 4px 14px 0px #00000017;
+}
+
+.password {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 37px;
+  gap: 7px;
+}
+
+.bouton {
+  display: flex;
+  margin-bottom: 28px;
+  justify-content: center;
+}
+
+.bouton button {
+  background-color: #1d6154;
+  color: white;
+}
+
+.oubli a {
+  color: #3d3d3d;
+}
+
+#message {
+  display: flex;
+  color: red;
+  justify-content: center;
+  margin-bottom: 20px;
+  font-weight: 600;
 }
