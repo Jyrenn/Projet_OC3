@@ -209,3 +209,94 @@ addPhotoBtn.addEventListener("click", () => {
 
 // Lorsque l'utilisateur sélectionne un fichier, prévisualiser l'image
 fileInput.addEventListener("change", previewImage);
+
+//Valider Ajout//
+const validerButton = document.getElementById("valider-photo");
+const titleInput = document.querySelector("input[name='titre-texte']");
+const categorySelect = document.getElementById("choixCategorie");
+
+// Fonction de mise à jour de l'état du bouton "Valider"
+function updateValiderButtonState() {
+  if (
+    fileInput.files.length > 0 &&
+    titleInput.value.trim() !== "" &&
+    categorySelect.value !== ""
+  ) {
+    // Activer et changer la couleur du bouton
+    validerButton.disabled = false;
+    validerButton.style.backgroundColor = "#007BFF"; // Couleur active (exemple : bleu)
+  } else {
+    // Désactiver le bouton et réinitialiser la couleur
+    validerButton.disabled = true;
+    validerButton.style.backgroundColor = "#CCCCCC"; // Couleur inactive (exemple : gris)
+  }
+}
+
+// Ajouter des écouteurs d'événements pour surveiller les changements dans les champs
+fileInput.addEventListener("change", updateValiderButtonState);
+titleInput.addEventListener("input", updateValiderButtonState);
+categorySelect.addEventListener("change", updateValiderButtonState);
+
+validerButton.addEventListener("click", addPhotoToProjects);
+// Fonction pour ajouter la photo au projet lors du clic sur "Valider"
+
+async function addPhotoToProjects() {
+  // Vérifier que tous les champs sont bien remplis (sécurité supplémentaire)
+  if (
+    fileInput.files.length === 0 ||
+    titleInput.value.trim() === "" ||
+    categorySelect.value === ""
+  ) {
+    alert("Veuillez remplir tous les champs avant de valider.");
+    return;
+  }
+
+  const file = fileInput.files[0];
+  const title = titleInput.value;
+
+  // Convertir categorySelect.value en un nombre
+  const categoryId = Number(categorySelect.value);
+
+  // Vérifier si categoryId est bien un nombre
+  if (isNaN(categoryId)) {
+    alert("La catégorie sélectionnée n'est pas valide.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("image", file);
+  formData.append("title", title);
+  formData.append("categoryId", categoryId); // Utilisation du categoryId converti en entier
+
+  console.log("Fichier :", file);
+  console.log("Titre :", title);
+  console.log("ID de catégorie :", categoryId); // Vérifiez que c'est bien un nombre ici
+  console.log("Type de categoryId :", typeof categoryId); // Devrait afficher 'number'
+  console.log(token);
+  console.log(file.type);
+
+  try {
+    const response = await fetch(`http://localhost:5678/api/works`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+
+    // Si la réponse n'est pas OK, afficher l'erreur dans la console
+    if (!response.ok) {
+      const error = await response.json(); // Extraire l'erreur renvoyée par l'API
+      console.error("Erreur lors de l'ajout de la photo :", error);
+      alert(
+        `Erreur (${response.status}): ${error.message || "Détails inconnus"}`
+      );
+    } else {
+      // Si la requête réussit, actualiser la galerie
+      addGallery();
+      closeModal2(); // Fermer la modal après l'ajout
+    }
+  } catch (error) {
+    console.error("Erreur de connexion à l'API", error);
+  }
+}
