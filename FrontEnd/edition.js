@@ -74,6 +74,7 @@ if (a) {
 const closeButton = document.querySelectorAll(".croix");
 const modal1 = document.getElementById("modal1");
 const modal2 = document.getElementById("modal2");
+const arrowLeft = document.getElementById("arrow-left");
 
 function closeModal1() {
   modal1.style.display = "none";
@@ -100,6 +101,12 @@ modal2.addEventListener("click", (event) => {
   }
 });
 
+//Revenir à la moddal d'avant//
+arrowLeft.addEventListener("click", () => {
+  closeModal2();
+  openModal1();
+});
+
 //Supprimer un projet//
 
 const token = sessionStorage.getItem("authToken");
@@ -112,8 +119,6 @@ async function deleteProject(projectId) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          // Ajoutez ici un header Authorization si nécessaire pour l'authentification, par ex:
-          // 'Authorization': `Bearer ${token}`
         },
       }
     );
@@ -224,7 +229,7 @@ function updateValiderButtonState() {
   ) {
     // Activer et changer la couleur du bouton
     validerButton.disabled = false;
-    validerButton.style.backgroundColor = "#007BFF"; // Couleur active (exemple : bleu)
+    validerButton.style.backgroundColor = "#1D6154"; // Couleur active
   } else {
     // Désactiver le bouton et réinitialiser la couleur
     validerButton.disabled = true;
@@ -257,23 +262,10 @@ async function addPhotoToProjects() {
   // Convertir categorySelect.value en un nombre
   const categoryId = Number(categorySelect.value);
 
-  // Vérifier si categoryId est bien un nombre
-  if (isNaN(categoryId)) {
-    alert("La catégorie sélectionnée n'est pas valide.");
-    return;
-  }
-
   const formData = new FormData();
   formData.append("image", file);
   formData.append("title", title);
-  formData.append("categoryId", categoryId); // Utilisation du categoryId converti en entier
-
-  console.log("Fichier :", file);
-  console.log("Titre :", title);
-  console.log("ID de catégorie :", categoryId); // Vérifiez que c'est bien un nombre ici
-  console.log("Type de categoryId :", typeof categoryId); // Devrait afficher 'number'
-  console.log(token);
-  console.log(file.type);
+  formData.append("category", categoryId);
 
   try {
     const response = await fetch(`http://localhost:5678/api/works`, {
@@ -286,17 +278,100 @@ async function addPhotoToProjects() {
 
     // Si la réponse n'est pas OK, afficher l'erreur dans la console
     if (!response.ok) {
-      const error = await response.json(); // Extraire l'erreur renvoyée par l'API
+      const error = await response.json();
       console.error("Erreur lors de l'ajout de la photo :", error);
       alert(
         `Erreur (${response.status}): ${error.message || "Détails inconnus"}`
       );
     } else {
-      // Si la requête réussit, actualiser la galerie
-      addGallery();
-      closeModal2(); // Fermer la modal après l'ajout
+      // Si la requête réussit, récupérer les nouvelles données
+      const updatedWorks = await fetch(`http://localhost:5678/api/works`).then(
+        (res) => res.json()
+      );
+
+      // Mettre à jour les galeries
+      updateGalleries(updatedWorks);
+      closeModal2();
+      resetForm();
     }
   } catch (error) {
     console.error("Erreur de connexion à l'API", error);
   }
+}
+
+function updateGalleries(works) {
+  const galleryContainer = document.querySelector(".gallery");
+  const galleryContainerModal = document.querySelector(".gallery-modal");
+
+  // Vider les galeries
+  galleryContainer.innerHTML = "";
+  galleryContainerModal.innerHTML = "";
+
+  // Recréer les galeries avec les données actualisées
+  works.forEach((work) => {
+    // Ajouter dans la galerie principale
+    const card = document.createElement("figure");
+    card.setAttribute("data-id", `${work.id}`);
+    card.innerHTML = `
+      <img src="${work.imageUrl}" alt="${work.title}" />
+      <figcaption>${work.title}</figcaption>
+    `;
+    galleryContainer.appendChild(card);
+
+    // Ajouter dans la galerie de la modal
+    const modalCard = document.createElement("figure");
+    modalCard.setAttribute("data-id", `${work.id}`);
+    modalCard.innerHTML = `
+      <img src="${work.imageUrl}" alt="${work.title}" />
+      <i data-id="${work.id}" class="trash-icon fa-solid fa-trash-can"></i>
+    `;
+    galleryContainerModal.appendChild(modalCard);
+  });
+
+  // Réactiver les événements de suppression
+  document.querySelectorAll(".trash-icon").forEach((icon) => {
+    icon.addEventListener("click", (event) => {
+      const projectId = event.target.getAttribute("data-id");
+      if (projectId) {
+        deleteProject(projectId);
+      }
+    });
+  });
+}
+
+function resetForm() {
+  // Réinitialiser les champs de texte
+  titleInput.value = "";
+
+  // Supprimer et recréer les champs et boutons du formulaire
+  photoContainer.innerHTML = `
+    <i class="fa-regular fa-image"></i>
+    <button type="button" id="add-photo-btn">+ Ajouter photo</button>
+    <p>jpg.png : 4mo max</p>
+    <input
+      type="file"
+      id="file-input"
+      accept="image/*"
+      style="display: none"
+    />
+  `;
+
+  // Récupérer les nouvelles références
+  const newFileInput = document.getElementById("file-input");
+  const newAddPhotoBtn = document.getElementById("add-photo-btn");
+
+  // Réinitialiser le champ de fichier et la sélection de catégorie
+  newFileInput.value = null;
+  categorySelect.value = "";
+
+  // Ajouter les nouveaux événements
+  newFileInput.addEventListener("change", previewImage);
+  newFileInput.addEventListener("change", updateValiderButtonState);
+  newAddPhotoBtn.addEventListener("click", () => {
+    newFileInput.click();
+  });
+
+  // Réinitialiser l'état du bouton "Valider"
+  validerButton.disabled = true;
+  validerButton.style.backgroundColor = "#CCCCCC";
 }
