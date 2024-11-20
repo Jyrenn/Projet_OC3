@@ -105,6 +105,9 @@ nav,
 section {
   display: block;
 }
+figcaption {
+  margin-top: 7px;
+}
 body {
   line-height: 1;
   background: #fffef8;
@@ -261,6 +264,7 @@ button:focus {
 
 .gallery img {
   width: 100%;
+  object-fit: fill;
 }
 #contact {
   width: 50%;
@@ -408,6 +412,7 @@ footer {
 }
 
 .projets-et-icone {
+  margin-top: 139px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -610,6 +615,7 @@ footer {
 }
 
 .nouvelle-image {
+  position: fixed;
   object-fit: contain;
   max-width: 420px;
   max-height: 169px;

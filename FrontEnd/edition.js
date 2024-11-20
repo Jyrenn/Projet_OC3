@@ -191,7 +191,6 @@ function previewImage(event) {
       img.src = e.target.result; // Assigner la source de l'image
 
       // Vider le contenu actuel, afficher l'image et masquer le bouton
-      photoContainer.innerHTML = "";
       photoContainer.appendChild(img);
 
       // Permettre de cliquer sur l'image elle-même pour changer la photo
@@ -340,36 +339,16 @@ function updateGalleries(works) {
 }
 
 function resetForm() {
+  //Supprimer la previewImage
+  const newImage = document.querySelector(".nouvelle-image");
+  newImage.remove();
+
   // Réinitialiser les champs de texte
   titleInput.value = "";
 
-  // Supprimer et recréer les champs et boutons du formulaire
-  photoContainer.innerHTML = `
-    <i class="fa-regular fa-image"></i>
-    <button type="button" id="add-photo-btn">+ Ajouter photo</button>
-    <p>jpg.png : 4mo max</p>
-    <input
-      type="file"
-      id="file-input"
-      accept="image/*"
-      style="display: none"
-    />
-  `;
-
-  // Récupérer les nouvelles références
-  const newFileInput = document.getElementById("file-input");
-  const newAddPhotoBtn = document.getElementById("add-photo-btn");
-
   // Réinitialiser le champ de fichier et la sélection de catégorie
-  newFileInput.value = null;
+  fileInput.value = null;
   categorySelect.value = "";
-
-  // Ajouter les nouveaux événements
-  newFileInput.addEventListener("change", previewImage);
-  newFileInput.addEventListener("change", updateValiderButtonState);
-  newAddPhotoBtn.addEventListener("click", () => {
-    newFileInput.click();
-  });
 
   // Réinitialiser l'état du bouton "Valider"
   validerButton.disabled = true;
