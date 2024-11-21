@@ -1,6 +1,3 @@
-//import { addGallery } from "./index.js"; NE MARCHE PAS (importe aussi addFiltres//
-
-// Déclarez la fonction asynchrone pour pouvoir utiliser await
 const works = await fetch(`http://localhost:5678/api/works`).then((works) =>
   works.json()
 );
@@ -40,8 +37,6 @@ export function addGallery() {
     galleryContainerModal.appendChild(card);
   }
 }
-
-// Appeler la fonction pour ajouter la galerie
 addGallery();
 
 //Afficher modal1//
@@ -108,7 +103,6 @@ arrowLeft.addEventListener("click", () => {
 });
 
 //Supprimer un projet//
-
 const token = sessionStorage.getItem("authToken");
 async function deleteProject(projectId) {
   try {
@@ -172,7 +166,6 @@ async function addCategories() {
 addCategories();
 
 //Ajout photo//
-// Sélection des éléments du DOM
 const addPhotoBtn = document.getElementById("add-photo-btn");
 const fileInput = document.getElementById("file-input");
 const photoContainer = document.getElementById("photo-container");
@@ -190,7 +183,6 @@ function previewImage(event) {
       img.classList.add("nouvelle-image");
       img.src = e.target.result; // Assigner la source de l'image
 
-      // Vider le contenu actuel, afficher l'image et masquer le bouton
       photoContainer.appendChild(img);
 
       // Permettre de cliquer sur l'image elle-même pour changer la photo
@@ -232,7 +224,7 @@ function updateValiderButtonState() {
   } else {
     // Désactiver le bouton et réinitialiser la couleur
     validerButton.disabled = true;
-    validerButton.style.backgroundColor = "#CCCCCC"; // Couleur inactive (exemple : gris)
+    validerButton.style.backgroundColor = "#CCCCCC";
   }
 }
 
@@ -245,7 +237,7 @@ validerButton.addEventListener("click", addPhotoToProjects);
 // Fonction pour ajouter la photo au projet lors du clic sur "Valider"
 
 async function addPhotoToProjects() {
-  // Vérifier que tous les champs sont bien remplis (sécurité supplémentaire)
+  // Vérifier que tous les champs sont bien remplis
   if (
     fileInput.files.length === 0 ||
     titleInput.value.trim() === "" ||
@@ -257,9 +249,7 @@ async function addPhotoToProjects() {
 
   const file = fileInput.files[0];
   const title = titleInput.value;
-
-  // Convertir categorySelect.value en un nombre
-  const categoryId = Number(categorySelect.value);
+  const categoryId = categorySelect.value;
 
   const formData = new FormData();
   formData.append("image", file);

@@ -1,4 +1,3 @@
-// Déclarez la fonction asynchrone pour pouvoir utiliser await
 const works = await fetch(`http://localhost:5678/api/works`).then((works) =>
   works.json()
 );
@@ -25,8 +24,6 @@ export function addGallery() {
     galleryContainer.appendChild(card);
   }
 }
-
-// Appeler la fonction pour ajouter la galerie
 addGallery();
 
 function addFiltres() {

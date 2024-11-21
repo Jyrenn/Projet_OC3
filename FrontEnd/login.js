@@ -1,6 +1,4 @@
-//Login
-// URL de l'API pour la connexion
-const API_URL = "http://localhost:5678/api/users/login"; // Remplace 'login' par l'endpoint exact de connexion
+const login = "http://localhost:5678/api/users/login";
 
 // Gestionnaire de l'événement de soumission du formulaire
 document
@@ -13,26 +11,26 @@ document
     const password = document.getElementById("password").value;
 
     // Corps de la requête
-    const credentials = {
+    const identifiers = {
       email: email,
       password: password,
     };
 
     try {
       // Envoie les informations d'identification à l'API via une requête POST
-      const response = await fetch(API_URL, {
+      const response = await fetch(login, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(credentials),
+        body: JSON.stringify(identifiers),
       });
 
       // Analyse la réponse
       const result = await response.json();
 
       if (response.ok) {
-        // Connexion réussie, affiche un message de succès
+        // Connexion réussie
         const token = result.token;
         sessionStorage.setItem("authToken", token);
         window.location.href = "edition.html";
