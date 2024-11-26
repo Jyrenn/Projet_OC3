@@ -188,11 +188,14 @@ function previewImage(event) {
       // Permettre de cliquer sur l'image elle-même pour changer la photo
       img.addEventListener("click", () => {
         fileInput.click(); // Rouvrir le sélecteur de fichier
+        img.remove();
       });
     };
 
     // Lire le fichier sous forme d'URL de données
     reader.readAsDataURL(file);
+    const hide = document.getElementById("add-photo-btn");
+    hide.setAttribute("style", "display: none");
   } else {
     alert("Veuillez sélectionner une image valide.");
   }
@@ -332,7 +335,6 @@ function resetForm() {
   //Supprimer la previewImage
   const newImage = document.querySelector(".nouvelle-image");
   newImage.remove();
-
   // Réinitialiser les champs de texte
   titleInput.value = "";
 
@@ -343,4 +345,7 @@ function resetForm() {
   // Réinitialiser l'état du bouton "Valider"
   validerButton.disabled = true;
   validerButton.style.backgroundColor = "#CCCCCC";
+
+  const hide = document.getElementById("add-photo-btn");
+  hide.setAttribute("style", "display: block");
 }
