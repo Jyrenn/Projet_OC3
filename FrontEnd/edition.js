@@ -60,6 +60,14 @@ const openModal2 = function (e) {
   closeModal1();
 };
 
+//Afficher modal3//
+const openModal3 = function (e) {
+  const target = document.getElementById("modal3");
+  target.style.display = null;
+  target.removeAttribute("aria-hidden");
+  target.setAttribute("aria-modal", "true");
+};
+
 const a = document.querySelector(".ajouter-une-photo");
 if (a) {
   a.addEventListener("click", openModal2);
@@ -69,6 +77,7 @@ if (a) {
 const closeButton = document.querySelectorAll(".croix");
 const modal1 = document.getElementById("modal1");
 const modal2 = document.getElementById("modal2");
+const modal3 = document.getElementById("modal3");
 const arrowLeft = document.getElementById("arrow-left");
 
 function closeModal1() {
@@ -76,6 +85,9 @@ function closeModal1() {
 }
 function closeModal2() {
   modal2.style.display = "none";
+}
+function closeModal3() {
+  modal3.style.display = "none";
 }
 
 closeButton.forEach((button) => {
@@ -132,13 +144,31 @@ async function deleteProject(projectId) {
 }
 
 //Appel de la fonction suppression en cliquant sur les icones poubelle//
+let currentProjectId = null;
+
 document.querySelectorAll(".trash-icon").forEach((icon) => {
   icon.addEventListener("click", (event) => {
-    const projectId = event.target.getAttribute("data-id"); // Récupère l'ID du projet
-    if (projectId) {
-      deleteProject(projectId);
+    currentProjectId = event.target.getAttribute("data-id");
+    if (currentProjectId) {
+      openModal3();
     }
   });
+});
+
+const Oui = document.getElementById("Oui");
+const Non = document.getElementById("Non");
+
+Oui.addEventListener("click", (event) => {
+  if (currentProjectId) {
+    deleteProject(currentProjectId);
+    closeModal3();
+    currentProjectId = null;
+  }
+});
+
+Non.addEventListener("click", (event) => {
+  closeModal3();
+  currentProjectId = null;
 });
 
 //Ajouter les catégories dans le menu déroulant de la modal Ajout photo//
